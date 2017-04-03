@@ -1,0 +1,96 @@
+---------------------------------------------
+target: prereqirefiles
+    command
+---------------------------------------------
+make var
+    OBJS= a.o b.o c.o \
+            d.o
+---------------------------------------------
+自动推导
+    a.o:a.h
+    b.o:b.h
+---------------------------------------------
+伪目标
+    .PHONY: clean
+    clean:
+        rm -rf a.o b.o c.o d.o
+---------------------------------------------
+makefile的内容
+    显示规则
+    隐晦规则
+    变量定义
+    文件指示
+        include 
+        if
+    注释
+---------------------------------------------
+makefile文件名
+    GNUmakefile
+        only for GNUmake 
+    Makefile 
+    makefile 
+    make -f file.name
+    make --file file.name 
+---------------------------------------------
+makefile包含文件
+    include filename1 *.mk $(FILNAMEMK)
+    
+    -include filename1 *.mk $(FILNAMEMK)
+    sinclude filename1 *.mk $(FILNAMEMK)
+
+
+    search path:
+        current dir
+        make [-I dir| --include-dir dir]
+        <prefix>/include
+---------------------------------------------
+env var 
+    MAKFILES
+        do include operation
+---------------------------------------------
+makefile 工作过程：
+    读入makefile
+    读入include的file
+    初始化变量
+    推到隐晦规则，分析所有规则
+    为所有文件创建目标依赖
+    根据依赖决定那些文件需要生成
+    执行命令
+---------------------------------------------
+makefile规则
+    targets: prereqirefiles
+        command1
+        command2
+    targets: prereqirefiles;command1
+        command2
+规则中的通配符(和bash是相同的)
+    *
+    [...]
+    ~
+    ?
+---------------------------------------------
+makefile变量的通配
+    OBJSE= $(wildcard *.o)
+---------------------------------------------
+makefile规则文件搜寻
+    VPATH
+    vpath
+        set
+            vpath <pattern> <directory>
+                vpath %.h ../headers
+        clear
+            vpath <pattern>
+        clear-all
+            vpath
+---------------------------------------------
+makefile多目标
+    bigoutput littleoutput : text.g
+    generate text.g -$(subst output,,$@) > $@
+    ---------------------------------------------
+    bigoutput : text.g
+        generate text.g -big > bigoutput
+    littleoutput : text.g
+        generate text.g -little > littleoutput
+        
+    
+
