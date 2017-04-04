@@ -1,0 +1,17 @@
+include makefile.def
+-include nofile.def1
+sinclude nofile.def2
+#include makefile.config
+
+OBJS = main.o a.o b.o c.o
+main: $(OBJS)
+	g++ -o main $(OBJS)
+
+main.o: a.h b.h c.h
+a.o: a.h
+b.o: b.h
+c.o: c.h
+
+.PHONY: clean
+clean:
+	rm -rf $(OBJS) main

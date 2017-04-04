@@ -138,8 +138,340 @@ makefile 命令
         make [-i | --ignore-errors]
         -------------
         make [-k | --keep-going]
+---------------------------------------------
+嵌套makefile
+    subsystem:
+        cd subdir; make 
+    -------------
+    subsystem:
+        make -C subdir 
+    -------------
+    变量传递到下级
+        export <variable ...>
+            export variable=value
+            ===========
+            variable=value
+            export variable
+            -------------
+            variable:=value 
+            variable+=value
+    -------------
+    变量不传递到下级
+        unexport <variable ...>
+    ------------- 
+    SHELL, MAKEFLAGS 总是会传递到下层
+    -C,-h,-o,-f,-W始终不会向下传递
+    -------------
+---------------------------------------------
+makefile 变量 
+    ${varname}
+    $(varname)
+    -------------
+    $ 特殊字符
+    -------------
+    变量赋值
+        value=world
+        varname=$(value)
+        value=hello
+            value是使用滞后定义
+        ---------------
+        value=world 
+        varname=$(value)
+        value=hello
+            value是使用前置定义
+    -------------
+    nullstring:=
+    space = $(nullstring) #space
+    -------------
+    MAKELEVEL
+    -------------
+    varname?= $(value)
+    -------------
+    cur_dir=$(shell pwd)
+    -------------
+    advanced var operation
+        $(var:.o=.c)
+        $(var:%.o=%.c)
+        -------------
+        x=y
+        y=z
+        $($(x))
+        -------------
+        $(subst, patter, replace, string)
+        -------------
+        变量追加
+            +=
+            -------------
+            objs = a.o b.o
+            objs = $(objs) c.o
+            -------------
+            objs := a.o b.o
+            objs := $(objs) c.o
+        -------------
+        override <variable> = <value>
+        override <variable> += <value>
+        
+        define foo
+            bar
+        endef
+        -------------
+        multi-line var 
+            define two-line
+                echo hello 
+                echo world
+            endef
+---------------------------------------------
+makefile 环境变量
+    make -e 
+---------------------------------------------
+makefile 目标变量
+    <target...> : <variable-assign>
+    <target...> : override <variable-assign>
+makefile 模式变量
+    <pattern...> : <variable-assign>
+    <pattern...> : override <variable-assign>
+---------------------------------------------
+makefile条件判断
+    ifeq( $(cc), gcc)
+        command
+    else
+        command 
+    endif
+    -------------
+    ifneq
+    -------------
+    ifdef
+    ---------------
+    ifndef
+    -------------
+---------------------------------------------
+makefile 函数
+    $(<function> <argument>)
+    ${<function> <argument>}
+    -------------
+    字符串处理函数
+        $(subst <from>, <to>, <text> )
+        $(patsubst <pattern>, <replacement>, <text>)
+        $(strip <string>) 
+            #remove prefix/sufffix space
+        $(findstring <find>, <in>)
+        $(filter <pattern...> <text>)
+        $(filter-out <pattern...> <text>)
+        $(sort <list>)
+        $(word <n>, <text>)
+        $(word <s>,<e>, <text>)
+        $(word <text>)
+        $(firstword <text>)
+        $(word <text>)
+    -------------
+    文件名函数
+        $(dir <names...>)
+        $(notdir <names...>)
+        $(suffix <names...>)
+        $(basename <names...>)
+        $(addsuffix <suffix>, <names...>)
+        $(addprefix <prefix>, <names...>)
+    -------------
+    other
+        $(join <list1>, <list2>)
+        $(foreach <var>, <list>, <text>)
+        $(if <condition>, <then-part>)
+        $(if <condition>, <then-part>, <else-part>)
+        $(call <expression>, <param1>, <param2>)
+   -------------
+    $(origin varname)
+        #获取变量的来源
+    -------------
+    shell函数
+        $(shell )
+    -------------
+    控制makefile
+        $(error <text...>)
+        $(warning <text...>)
+---------------------------------------------
+makefile退出码
+    0, succ
+    1，出错
+    2, latest update
+---------------------------------------------
+指定makefile
+    make -f file.mk
+    make --file file.mk 
+指定目标
+    first target: by default
+    MAKECMDGOALS
+    clean/all/install/print/tags/check/test/
+---------------------------------------------
+检查规则
+    只是打印命令
+        -n 
+        --just-print
+        --dry-run
+        --recon
+    更新目标文件时间戳
+        -t
+        --touch
+    看文件是否存在
+        -q
+        --question
+    运行依赖某个文件的规则
+        -W <file>
+        --what-if=<file>
+        --assum-new=<file>
+        --new-file=<file>
+---------------------------------------------
+makefile 参数
+    -b, -m 
+        忽略和其他版本的兼容性
+    -B， --always-make
+        所有目标都重新构建
+    -C <dir>, --dirctory<dir>
+        指定makefile的目录
+    --debug [=options]
+        a,b,v,i,j,m
+    -d 
+        --debug=a
+    -e, --environment-overrides
+   
+    -f <file>
+    --file <file>
+    --makefile=<file>
 
+    -h, --help
+
+    -i, --ignore-errors
+
+    -I <dir>, 
+    --include-dir <dir>
+
+    -j [jobnum]
+    --jobs=<jobnum>
+
+    -k 
+    --keep-going
+
+    -l <load>
+    --load-average[=<load>]
+    --max-load[=<load>]
+
+    -n
+    --just-print
+    --dry-run
+    --recon
+
+    -o <file>
+    --old-file=<file>
+    --assum-old=<file>
+
+    -p
+    --print-data-base
+
+    -q
+    --question
+
+
+    -r 
+    --no-builtin-rules
+        禁用隐含规则
+
+    -R 
+    --no-builtin-variables
+        禁用变量上的隐含规则
+
+    -s, --silent, --quiet 
+
+    -t, --touch
+
+    -v, --version
+
+    --print-directory
+
+    --no-print-directory
+
+    --warn-undefined-variables
+---------------------------------------------
+隐含规则
+    c
+        <n>.o : <n>.c
+    c++
+        <n.o> : <n>.cc 
+        <n.o> : <n>.C
+    命令变量
+        AR 
+            ar 
+        AS 
+            as 
+        CC 
+            cc 
+        CXX 
+            g++
+        CPP 
+            $(CC) -E 
+    命令参数
+        ARFLAGS
+        ASFLAGS
+        CFLAGS
+        CXXFLAGS
+---------------------------------------------
+模式规则
+    %.o:%.c; command 
+
+    %
+        长度非空的字符串
+    -------------
+    %.o:%.c
+        gcc -c $< -o $@
+    -------------
+    自动化变量
+        $@
+            目标集合 
+        $%
+            仅当是函数库文件
+            foo.a(bar.o)
+                $%, bar.o
+                $@, foo.a 
+        $<
+            依赖目标中的第一个文件
+        $?
+            比目标新的依赖文件
+        $^
+            所有依赖文件
+        $+
+            same as $^, no duplicated file 
+        $*
+            匹配%以前的部分
+        -------------
+        $(%D)
+            目录部分
+        $(%F)
+            文件部分
+    -------------
+    模式匹配
+        %.c:%.o
+            %匹配的内容叫做茎
+            如果模式匹配中有/，那么先移除目录部分，然后进行匹配
+---------------------------------------------
+重建内建隐含规则
+    %.c:%.o
+        command 
+取消内建隐含规则
+    %.c:%.o
+---------------------------------------------
+老的后缀
+    双后缀
+        .c.o
+            %o:%c
+    单后缀
+        .c
+            %:%.c
+    ---------------
+    .SUFFIX: .hack .win #引入默认后缀 
+ 
+    .SUFFIX:#清除默认后缀
+    .SUFFIX: .h .o .c #定义自己的后缀
+---------------------------------------------
+makefile更新库
 
         
-    
+
 

@@ -1,0 +1,13 @@
+main: main.o a.o b.o c.o
+	g++ -o main main.o a.o b.o c.o
+main.o: main.cpp
+	g++ -c main.cpp 
+a.o: a.cpp a.h
+	g++ -c a.cpp 
+b.o: b.cpp b.h
+	g++ -c b.cpp
+c.o: c.cpp c.h
+	g++ -c c.cpp 
+
+clean:
+	rm -rf *.o main

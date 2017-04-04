@@ -1,0 +1,25 @@
+include makefile.def
+-include nofile.def1
+sinclude nofile.def2
+#include makefile.config
+
+OBJS = main.o a.o b.o c.o
+
+all:main
+
+.PHONY: all
+
+main: $(OBJS)
+	g++ -o main $(OBJS)
+
+
+%.o:%.cpp 
+	@echo $@
+	g++ -c $^ -o $@
+#%d:%.cpp
+#	g++ -MMM $< >$@.$$$$
+#	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@
+
+.PHONY: clean
+clean:
+	rm -rf $(OBJS) main
