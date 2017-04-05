@@ -99,7 +99,9 @@ makefile多目标
     <targets ...>: <target-pattern>: <prereq-patterns ...>
         <commands>
     ---------------------------------------------
-    all: $(objects)$(objects): %.o: %.c
+    all: $(objects)
+    
+    $(objects): %.o: %.c
         $(CC) -c $(CFLAGS) $< -o $@
     ---------------------------------------------
     $<
@@ -240,7 +242,7 @@ makefile条件判断
     -------------
     ifneq
     -------------
-k   ifdef
+    ifdef
     ---------------
     ifndef
     -------------
