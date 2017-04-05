@@ -62,7 +62,12 @@ command10:
 	@echo $(var)
 
 command11:
+	filelist=$(shell find . -type f |grep "cpp")
+	@echo $(filelist)
+
+command12:
 	@echo $(MAKECMDGOALS)
+
 .PHONY: clean
 clean:
 	rm -rf $(OBJS) main
